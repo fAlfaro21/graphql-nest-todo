@@ -1,11 +1,10 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TodoService } from './todo.service';
 import { Todo } from './entity/todo.entity';
-import { CreateTodoInput, UpdateTodoInput } from './dto/inputs/index';
-import { StatusArgs } from './dto/args/status.args';
+import { CreateTodoInput, UpdateTodoInput, StatusArgs } from './dto';
 import { AggregationsType } from './types/aggregations.type';
 
-@Resolver( () => Todo )
+@Resolver( () => Todo ) //Le decimos al resolver el tipo de dato que va a gestionar: es decir, un Todo
 export class TodoResolver {
 
     //Inyectamos nuestro servicio para poder servir a mis queries
@@ -13,7 +12,8 @@ export class TodoResolver {
         private readonly todoService: TodoService
     ){}
 
-    @Query( () => [Todo], { name: 'todos' } ) //Va a devolver un array de tipo "Todo"(entidad que definimos). Con este decorador definimos que será una query. OJO: debemos importarlo de GQL
+    //OJO: Importar Query de GQL
+    @Query( () => [Todo], { name: 'todos' } ) //Este 'Todo' es de GQL. Va a devolver un array de tipo "Todo"(entidad que definimos). Con este decorador definimos que será una query. OJO: debemos importarlo de GQL
     findAll( 
         @Args() statusArgs: StatusArgs 
     ): Todo[] { //Este 'Todo' es de tipo typescript, el de arriba es de tipo grphql
@@ -68,7 +68,7 @@ export class TodoResolver {
         return this.todoService.completedTodos;
     }
 
-    @Query( () => AggregationsType )
+    @Query( () => AggregationsType ) //AggregationsType va a ser un nuevo tipo de dato personalizado
     aggregations(): AggregationsType{
         return{
             completed: this.todoService.completedTodos,

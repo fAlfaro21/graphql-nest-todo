@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Todo } from './entity/todo.entity';
 import { CreateTodoInput, UpdateTodoInput } from './dto/inputs';
-import { todo } from 'node:test';
+import { Todo } from './entity/todo.entity';
 import { StatusArgs } from './dto/args/status.args';
 
 @Injectable()
@@ -15,7 +14,7 @@ export class TodoService {
         { id: 4, description: 'Piedra del Tiempo', done: false},
     ];
 
-    //Este getter lo vamos a utilizar para nuestro aggregation
+    //Este getter lo vamos a utilizar para nuestros aggregations
     get totalTodos(){
         return this.todos.length;
     }
@@ -54,8 +53,8 @@ export class TodoService {
     }
 
     update( id: number, updateTodoInput: UpdateTodoInput ) { //El id no va a venir en la url sino en el body de la petición
-        const { descritpion, done } = updateTodoInput;
-        const todoToUpdate = this.findOne( id ); //Si da un error no termina        return;
+        const { descritpion, done } = updateTodoInput; //Desestructuro los campos description y done
+        const todoToUpdate = this.findOne( id ); //Si da un error, lanza la excepción y ya no sigue
         if (descritpion) todoToUpdate.description = descritpion;
         if (done !== undefined) todoToUpdate.done = done;  //Evaluamos el done contra undefined porque no lo podemos evaluar contra false (ya que es uno de los valores posibles)
 
